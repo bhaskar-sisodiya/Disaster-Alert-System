@@ -1,0 +1,83 @@
+/* Page container */
+.alerts-page {
+  position: relative;
+  padding: 4rem 3rem;
+  background: #f4f7fb;
+  min-height: calc(100vh - 70px);
+}
+
+/* Back button */
+.page-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: white;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.page-back-btn:hover {
+  background: #2563eb;
+  color: white;
+}
+
+/* Create alert form */
+.alert-form {
+  max-width: 500px;
+  margin: 0 auto 3rem auto; /* ✅ CENTER FORM */
+  background: white;
+  padding: 1.75rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Inputs */
+.alert-form input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #c7d2fe;
+  background: #eef2ff;
+}
+
+.alert-form input:focus {
+  outline: none;
+  border-color: #2563eb;
+  background: white;
+}
+
+/* Button */
+.alert-form button {
+  padding: 12px;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  font-weight: 600;
+  text-align: center;
+}
+
+.alert-form button:hover {
+  background: #1e40af;
+}
+
+/* Alerts grid */
+.alerts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* Alert card */
+.alert-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 14px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}

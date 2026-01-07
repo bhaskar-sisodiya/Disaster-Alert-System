@@ -1,0 +1,87 @@
+/* 🔑 FIX alignment inconsistencies */
+.form-container *,
+.alert-form * {
+  box-sizing: border-box;
+}
+
+.form-page {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #f4f7fb;
+}
+
+.page-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: white;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+}
+
+.page-back-btn:hover {
+  background: #2563eb;
+  color: white;
+}
+
+.form-container {
+  width: 380px;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid #c7d2fe;
+  background: #eef2ff;
+}
+
+.form-container input:focus {
+  outline: none;
+  border-color: #2563eb;
+  background: white;
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px; /* ✅ consistent spacing */
+}
+
+.form-container button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center; /* enough */
+}
+
+
+.form-container button[type="submit"]:hover {
+  background: #1e40af;
+}
+
+.error-text {
+  color: #dc2626;
+  text-align: center;
+  margin-bottom: 1rem;
+}
