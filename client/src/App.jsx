@@ -5,14 +5,20 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import CreateAlert from "./components/CreateAlert";
 import ViewAlerts from "./components/ViewAlerts";
+import EmergencyCategories from "./components/EmergencyCategories";
+import EmergencyNumbers from "./components/EmergencyNumbers";
+import Profile from "./components/Profile";
+import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 
 function App() {
   return (
     <>
+      {/* 🔝 Always visible */}
       <Navbar />
 
+      {/* 🔄 Page content */}
       <Routes>
         {/* PUBLIC */}
         <Route
@@ -40,7 +46,16 @@ function App() {
           }
         />
 
-        {/* PROTECTED ALERT ROUTES */}
+        {/* PROTECTED */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        
         <Route
           path="/alerts/create"
           element={
@@ -49,7 +64,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/alerts/view"
           element={
@@ -58,7 +72,28 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/emergency"
+          element={
+            <ProtectedRoute>
+              <EmergencyCategories />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/emergency/:category"
+          element={
+            <ProtectedRoute>
+              <EmergencyNumbers />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
+
+      {/* 🔻 Always visible */}
+      <Footer />
     </>
   );
 }

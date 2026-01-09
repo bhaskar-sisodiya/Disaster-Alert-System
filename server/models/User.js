@@ -2,23 +2,35 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  email:    { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-}, { timestamps: true });
+const userSchema = new mongoose.Schema(
+  {
+    username: { type: String, required: true, unique: true },
+    email:    { type: String, required: true, unique: true },
+    password: { type: String, required: true },
 
-// Hash password before saving
-userSchema.pre("save", function () {
+    phone: { type: String },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other", "Prefer not to say"],
+      default: "Prefer not to say",
+    },
+    location: { type: String },
+
+    isAdmin: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
+
+/* ✅ CORRECT pre-save hook */
+userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
-  return bcrypt.hash(this.password, 10).then(hash => {
-    this.password = hash;
-  });
+
+  this.password = bcrypt.hash(this.password, 10);
 });
 
-// Compare password
+/* Compare password */
 userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  return bcrypt.compare(enteredPassword, this.password);
 };
 
 export default mongoose.model("User", userSchema);

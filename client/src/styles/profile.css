@@ -1,0 +1,116 @@
+/* Center the whole page */
+.profile-page {
+  position: relative;
+  padding: 4rem 3rem; /* space inside page */
+  min-height: calc(100vh - 70px); /* navbar height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page-back-btn {
+  position: absolute;
+  top: 20px;      /* relative to profile-page */
+  left: 20px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: white;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.page-back-btn:hover {
+  background: #2563eb;
+  color: white;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 520px;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.profile-summary {
+  text-align: center;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.profile-form label {
+  width: 100%;
+  text-align: left;
+  margin-top: 1.2rem;
+  font-weight: 600;
+}
+
+.profile-form input,
+.profile-form select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border-radius: 8px;
+  font-size: 1rem;
+  border: 1px solid #c7d2fe;
+  background: #f8fafc;
+}
+
+.profile-form input:focus,
+.profile-form select:focus {
+  outline: none;
+  border-color: #2563eb;
+  background: white;
+}
+
+
+.profile-form button {
+  margin-top: 1.5rem;
+  padding: 10px;
+  background: #2563eb;
+  color: white;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+}
+
+.success-text {
+  margin-top: 1rem;
+  color: green;
+}
+
+.profile-view p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.profile-view button {
+  margin-top: 1.5rem;
+  padding: 10px 16px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+.btn-outline {
+  background: white;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  border-radius: 8px;
+  padding: 10px 16px;
+}

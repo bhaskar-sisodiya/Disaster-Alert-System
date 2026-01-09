@@ -8,6 +8,8 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import alertRoutes from "./routes/alertRoutes.js";
+import userRoutes from "./routes/userRoutes.js"
+import emergencyNumberRoutes from "./routes/emergencyNumberRoutes.js"
 
 const app = express();
 
@@ -25,6 +27,8 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/alerts", alertRoutes);
+app.use("/api/users/profile", userRoutes);
+app.use("/api/emergency", emergencyNumberRoutes);
 
 const PORT = process.env.PORT || 5000;
 

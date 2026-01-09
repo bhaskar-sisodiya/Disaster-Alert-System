@@ -9,9 +9,7 @@ export default function LandingPage() {
     return (
       <div className="landing dashboard">
         <div className="dashboard-container">
-          <h1 className="dashboard-title">
-            Welcome to Disaster Alert System
-          </h1>
+          <h1 className="dashboard-title">Welcome to Disaster Alert System</h1>
 
           <div className="dashboard-grid">
             <div
@@ -47,15 +45,17 @@ export default function LandingPage() {
               <p>Insights & trends</p>
             </div>
 
-            <div className="dashboard-card">
+            <div
+              className="dashboard-card"
+              onClick={() => navigate("/emergency")}
+            >
               📞
               <h3>Emergency Numbers</h3>
               <p>Quick access</p>
             </div>
 
             <div className="dashboard-card placeholder">
-              +
-              <p>Coming Soon</p>
+              +<p>Coming Soon</p>
             </div>
           </div>
         </div>
