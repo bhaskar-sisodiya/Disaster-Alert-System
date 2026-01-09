@@ -100,3 +100,29 @@ export const getAlerts = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+/**
+ * DELETE /api/alerts/:id
+ * Delete a specific alert by ID
+ */
+export const deleteAlert = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate ID format
+    if (!id || id.length !== 24) {
+      return res.status(400).json({ message: "Invalid alert ID" });
+    }
+
+    const alert = await Alert.findByIdAndDelete(id);
+
+    if (!alert) {
+      return res.status(404).json({ message: "Alert not found" });
+    }
+
+    res.json({ message: "Alert deleted successfully", deletedAlert: alert });
+  } catch (error) {
+    console.error("Error deleting alert:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

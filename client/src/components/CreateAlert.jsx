@@ -1,51 +1,33 @@
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import "./../styles/alerts.css";
 
-export default function Alerts() {
+export default function CreateAlert({ onCreated }) {
+  const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
-  const [alerts, setAlerts] = useState([]);   // MUST stay array
   const [location, setLocation] = useState("");
   const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  /* ---------------- FETCH ALERTS ---------------- */
-  const fetchAlerts = async () => {
-    const token = localStorage.getItem("token");
+  /* ---------------- IMAGE HANDLERS ---------------- */
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    // 🔴 HARD GUARD
-    if (!token) {
-      setError("Not authenticated. Please login again.");
-      setAlerts([]);
-      return;
-    }
-
-    try {
-      const res = await fetch(`${API_URL}/alerts`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to fetch alerts");
-      }
-
-      // ✅ Ensure array
-      setAlerts(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Fetch alerts error:", err);
-      setError(err.message);
-      setAlerts([]); // NEVER allow non-array
-    }
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
   };
 
-  useEffect(() => {
-    fetchAlerts();
-  }, []);
+  const removeImage = () => {
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+    setImage(null);
+    setPreview(null);
+  };
 
   /* ---------------- CREATE ALERT ---------------- */
   const handleSubmit = async (e) => {
@@ -68,7 +50,7 @@ export default function Alerts() {
 
       const formData = new FormData();
       formData.append("location", location);
-      formData.append("image", image); // ✅ MUST match multer
+      formData.append("image", image);
 
       const res = await fetch(`${API_URL}/alerts`, {
         method: "POST",
@@ -86,10 +68,9 @@ export default function Alerts() {
 
       // Reset form
       setLocation("");
-      setImage(null);
+      removeImage();
 
-      // Refresh list
-      fetchAlerts();
+      onCreated && onCreated();
     } catch (err) {
       console.error("Create alert error:", err);
       setError(err.message);
@@ -100,7 +81,15 @@ export default function Alerts() {
 
   return (
     <div className="alerts-page">
-      <h2>🚨 Create Alert</h2>
+      {/* 🔙 BACK BUTTON */}
+      <button className="page-back-btn" onClick={() => navigate("/")}>
+        ← Back
+      </button>
+
+      {/* 🔹 HEADER */}
+      <div className="page-header">
+        <h1 className="page-title">Create Alert</h1>
+      </div>
 
       <form className="alert-form" onSubmit={handleSubmit}>
         {error && <p className="error-text">{error}</p>}
@@ -115,28 +104,27 @@ export default function Alerts() {
         <input
           type="file"
           accept="image/png,image/jpeg,image/webp"
-          onChange={(e) => setImage(e.target.files[0])}
+          onChange={handleImageChange}
         />
+
+        {/* 🖼️ IMAGE PREVIEW */}
+        {preview && (
+          <div className="image-preview">
+            <img src={preview} alt="Preview" />
+            <button
+              type="button"
+              className="remove-image-btn"
+              onClick={removeImage}
+            >
+              Remove Image
+            </button>
+          </div>
+        )}
 
         <button type="submit" disabled={loading}>
           {loading ? "Uploading..." : "Create Alert"}
         </button>
       </form>
-
-      <h2 style={{ marginTop: "2rem" }}>📢 Active Alerts</h2>
-
-      <div className="alerts-grid">
-        {alerts.length === 0 && !error && <p>No alerts found</p>}
-
-        {Array.isArray(alerts) &&
-          alerts.map((alert) => (
-            <div key={alert._id} className="alert-card">
-              <strong>{alert.type}</strong>
-              <p><b>Location:</b> {alert.location}</p>
-              <p><b>Severity:</b> {alert.severity}</p>
-            </div>
-          ))}
-      </div>
     </div>
   );
 }

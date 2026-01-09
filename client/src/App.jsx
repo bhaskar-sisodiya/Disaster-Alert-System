@@ -3,18 +3,18 @@ import Navbar from "./components/Navbar";
 import LandingPage from "./components/LandingPage";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Alerts from "./components/Alerts";
+import CreateAlert from "./components/CreateAlert";
+import ViewAlerts from "./components/ViewAlerts";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 
 function App() {
   return (
     <>
-      {/* ✅ Navbar ALWAYS visible */}
       <Navbar />
 
       <Routes>
-        {/* PUBLIC ROUTES */}
+        {/* PUBLIC */}
         <Route
           path="/"
           element={
@@ -40,12 +40,21 @@ function App() {
           }
         />
 
-        {/* PROTECTED ROUTE */}
+        {/* PROTECTED ALERT ROUTES */}
         <Route
-          path="/alerts"
+          path="/alerts/create"
           element={
             <ProtectedRoute>
-              <Alerts />
+              <CreateAlert />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/alerts/view"
+          element={
+            <ProtectedRoute>
+              <ViewAlerts />
             </ProtectedRoute>
           }
         />

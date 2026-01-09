@@ -34,7 +34,7 @@ export default function Login() {
       if (!res.ok) throw new Error(data.message);
 
       localStorage.setItem("token", data.token);
-      navigate("/alerts");
+      navigate("/");
     } catch (err) {
       setError(err.message);
     } finally {

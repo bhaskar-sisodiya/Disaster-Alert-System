@@ -1,6 +1,18 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 export default function PublicRoute({ children }) {
   const token = localStorage.getItem("token");
-  return token ? <Navigate to="/alerts" replace /> : children;
+  const location = useLocation();
+
+  // ✅ Allow logged-in users to stay on landing page
+  if (token && location.pathname === "/") {
+    return children;
+  }
+
+  // ❌ Block login & register when logged in
+  if (token) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 }
