@@ -2,16 +2,20 @@ import mongoose from "mongoose";
 
 const alertSchema = mongoose.Schema(
   {
-    type: { 
-      type: String, 
-      required: true, 
+    type: {
+      type: String,
+      required: true,
       // enum: ["fire", "flood", "earthquake", "accident"]
     },
-    confidence: { 
-      type: Number, 
-      required: true, 
-      min: 0, 
-      max: 1 
+    imageUrl: {
+      type: String,
+      required: true,
+    },
+    confidence: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 1,
     },
     severity: {
       type: String,

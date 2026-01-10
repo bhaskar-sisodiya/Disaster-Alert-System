@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./../styles/profile.css";
+import { avatars } from "../constants/avatars";
 
 export default function Profile() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -13,6 +14,7 @@ export default function Profile() {
     phone: "",
     gender: "",
     location: "",
+    avatar: "",
   });
 
   const [loading, setLoading] = useState(true);
@@ -31,6 +33,7 @@ export default function Profile() {
     const data = await res.json();
     setProfile(data);
     setForm({
+      avatar: data.avatar || "avatar1",
       username: data.username,
       phone: data.phone || "",
       gender: data.gender || "Prefer not to say",
@@ -72,6 +75,11 @@ export default function Profile() {
         {/* VIEW MODE */}
         {!editMode && (
           <div className="profile-view">
+            <img
+              src={avatars[profile.avatar]}
+              alt="Avatar"
+              className="profile-avatar"
+            />
             <p>
               <b>Username:</b> {profile.username}
             </p>
@@ -95,6 +103,22 @@ export default function Profile() {
         {/* EDIT MODE */}
         {editMode && (
           <div className="profile-form">
+            <label>Choose Avatar</label>
+
+            <div className="avatar-grid">
+              {Object.keys(avatars).map((key) => (
+                <img
+                  key={key}
+                  src={avatars[key]}
+                  alt={key}
+                  className={`avatar-option ${
+                    form.avatar === key ? "selected" : ""
+                  }`}
+                  onClick={() => setForm({ ...form, avatar: key })}
+                />
+              ))}
+            </div>
+
             <label>Username</label>
             <input
               value={form.username}

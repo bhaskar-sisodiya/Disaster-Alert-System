@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import "./../styles/alerts.css";
 
 export default function CreateAlert({ onCreated }) {
@@ -63,8 +64,17 @@ export default function CreateAlert({ onCreated }) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "Failed to create alert");
+        toast.error(data.message || "Failed to create alert");
+        return;
       }
+
+      // ✅ must check that _id exists
+      if (!data?._id) {
+        toast.info(data.message || "No alert created");
+        return;
+      }
+
+      toast.success(`✅ Alert created: ${data.type} (${data.severity})`);
 
       // Reset form
       setLocation("");
@@ -104,6 +114,7 @@ export default function CreateAlert({ onCreated }) {
         <input
           type="file"
           accept="image/png,image/jpeg,image/webp"
+          // capture="environment" ,image/*
           onChange={handleImageChange}
         />
 
@@ -125,6 +136,16 @@ export default function CreateAlert({ onCreated }) {
           {loading ? "Uploading..." : "Create Alert"}
         </button>
       </form>
+
+      <div className="below-form-link">
+        <button
+          type="button"
+          className="view-alerts-link"
+          onClick={() => navigate("/alerts/view")}
+        >
+          View Active Alerts →
+        </button>
+      </div>
     </div>
   );
 }

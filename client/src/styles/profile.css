@@ -86,9 +86,23 @@
   color: green;
 }
 
+.profile-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 .profile-view p {
-  margin: 0.5rem 0;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
+  background: #f8fafc;
+  padding: 10px 14px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.profile-view p b {
+  font-weight: 600;
 }
 
 .profile-view button {
@@ -98,6 +112,7 @@
   color: white;
   border: none;
   border-radius: 8px;
+  font-size: 1rem;
   font-weight: 600;
 }
 
@@ -105,6 +120,46 @@
   display: flex;
   gap: 12px;
   margin-top: 1.5rem;
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.avatar-grid {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.avatar-option {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.2s;
+}
+
+.avatar-option:hover {
+  transform: scale(1.1);
+}
+
+.avatar-option.selected {
+  border-color: #2563eb;
+}
+
+.profile-avatar,
+.avatar-option {
+  aspect-ratio: 1 / 1;        /* 🔥 KEY LINE */
+  object-fit: cover;          /* Prevent stretching */
+  border-radius: 50%;
 }
 
 .btn-outline {

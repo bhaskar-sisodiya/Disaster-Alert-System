@@ -1,4 +1,7 @@
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import Navbar from "./components/Navbar";
 import LandingPage from "./components/LandingPage";
 import Login from "./components/Login";
@@ -8,6 +11,7 @@ import ViewAlerts from "./components/ViewAlerts";
 import EmergencyCategories from "./components/EmergencyCategories";
 import EmergencyNumbers from "./components/EmergencyNumbers";
 import Profile from "./components/Profile";
+import AlertHistory from "./components/AlertHistory";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
@@ -55,7 +59,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/alerts/create"
           element={
@@ -72,7 +76,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/alerts/history"
+          element={
+            <ProtectedRoute>
+              <AlertHistory />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/emergency"
           element={
@@ -94,6 +105,17 @@ function App() {
 
       {/* 🔻 Always visible */}
       <Footer />
+
+      {/* ✅ Toast container globally */}
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
     </>
   );
 }

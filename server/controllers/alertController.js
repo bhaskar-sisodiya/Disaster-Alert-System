@@ -1,6 +1,7 @@
 // controllers/alertController.js
 import Alert from "../models/Alert.js";
 import { detectDisaster } from "../utils/geminiClient.js";
+import { uploadAlertImage } from "../utils/uploadToSupabase.js";
 
 /**
  * POST /api/alerts
@@ -27,11 +28,9 @@ export const createAlert = async (req, res) => {
     // Guard against unsupported formats
     const supportedTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!supportedTypes.includes(mimeType)) {
-      return res
-        .status(400)
-        .json({
-          message: `Unsupported format: ${mimeType}. Please upload JPEG, PNG, or WebP.`,
-        });
+      return res.status(400).json({
+        message: `Unsupported format: ${mimeType}. Please upload JPEG, PNG, or WebP.`,
+      });
     }
 
     // Convert buffer → base64 string
@@ -49,9 +48,10 @@ export const createAlert = async (req, res) => {
     }
 
     if (!detection || !detection.type || !detection.severity) {
-      return res
-        .status(200)
-        .json({ message: "No clear disaster detected", raw: detection });
+      return res.status(422).json({
+        message: "No clear disaster detected. Alert not created.",
+        raw: detection,
+      });
     }
 
     // Debug logging
@@ -64,6 +64,8 @@ export const createAlert = async (req, res) => {
         .json({ message: "No clear disaster detected", raw: detection });
     }
 
+    const imageUrl = await uploadAlertImage(imageBuffer, mimeType);
+
     // Clean up location string (remove accidental quotes)
     const cleanLocation = location?.replace(/^"|"$/g, "") || "Unknown";
 
@@ -75,6 +77,7 @@ export const createAlert = async (req, res) => {
       reason: detection.reason || "No reason provided",
       location: cleanLocation,
       timestamp: new Date(),
+      imageUrl,
     });
 
     // TODO: Broadcast via Socket.IO here
@@ -88,18 +91,57 @@ export const createAlert = async (req, res) => {
 };
 
 /**
- * GET /api/alerts
- * Fetch all alerts
+ * GET /api/alerts/history
+ * Fetch all alerts (history)
  */
-export const getAlerts = async (req, res) => {
+export const getAlertsHistory = async (req, res) => {
   try {
-    const alerts = await Alert.find().sort({ createdAt: -1 });
-    res.json(alerts);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 8;
+
+    const skip = (page - 1) * limit;
+
+    const totalAlerts = await Alert.countDocuments();
+    const totalPages = Math.ceil(totalAlerts / limit);
+
+    const alerts = await Alert.find()
+      .sort({ createdAt: -1 }) // ✅ newest first
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      alerts,
+      page,
+      totalPages,
+      totalAlerts,
+      limit,
+    });
   } catch (error) {
-    console.error("Error fetching alerts:", error);
+    console.error("Error fetching alert history:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+/**
+ * GET /api/alerts
+ * Fetch ACTIVE alerts (last 24 hours only)
+ */
+export const getAlertsWithin1Day = async (req, res) => {
+  try {
+    const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    const alerts = await Alert.find({
+      createdAt: { $gte: last24Hours },
+    }).sort({ createdAt: -1 });
+
+    res.json(alerts);
+  } catch (error) {
+    console.error("Error fetching active alerts:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 /**
  * DELETE /api/alerts/:id

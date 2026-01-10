@@ -80,11 +80,50 @@
   background: #1e40af;
 }
 
+.below-form-link {
+  display: flex;
+  justify-content: center;
+  margin-top: -1.5rem;  /* ✅ pulls it slightly closer to form */
+  margin-bottom: 2rem;
+}
+
+.view-alerts-link {
+  background: transparent;
+  border: none;
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.view-alerts-link:hover {
+  text-decoration: underline;
+}
+
 /* Alerts grid */
 .alerts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+}
+
+/* Responsive fallbacks */
+@media (max-width: 1200px) {
+  .alerts-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .alerts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .alerts-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Alert card */
@@ -93,6 +132,18 @@
   padding: 1.5rem;
   border-radius: 14px;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+.alert-card p {
+  margin: 6px 0;
+}
+
+.alert-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
 }
 
 .delete-btn {

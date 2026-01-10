@@ -6,8 +6,32 @@ export default function ViewAlerts() {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
+  const [isAdmin, setIsAdmin] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [error, setError] = useState("");
+
+  const formatDateTime = (dateValue) => {
+    if (!dateValue) return "—";
+    const d = new Date(dateValue);
+
+    return d.toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const fetchProfile = async () => {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${API_URL}/users/profile`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    setIsAdmin(data.isAdmin);
+  };
 
   const fetchAlerts = async () => {
     const token = localStorage.getItem("token");
@@ -39,10 +63,6 @@ export default function ViewAlerts() {
     }
   };
 
-  useEffect(() => {
-    fetchAlerts();
-  }, []);
-
   const handleDelete = async (alertId) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this alert?"
@@ -73,6 +93,11 @@ export default function ViewAlerts() {
     }
   };
 
+  useEffect(() => {
+    fetchAlerts();
+    fetchProfile();
+  }, []);
+
   return (
     <div className="alerts-page">
       {/* 🔙 BACK BUTTON */}
@@ -83,6 +108,7 @@ export default function ViewAlerts() {
       {/* 🔹 HEADER */}
       <div className="page-header">
         <h1 className="page-title">Active Alerts</h1>
+        <p className="page-subtitle">Showing alerts from last 24 hours</p>
       </div>
 
       <div className="alerts-grid">
@@ -90,6 +116,14 @@ export default function ViewAlerts() {
 
         {alerts.map((alert) => (
           <div key={alert._id} className="alert-card">
+            {alert.imageUrl && (
+              <img
+                src={alert.imageUrl}
+                alt="disaster"
+                className="alert-image"
+              />
+            )}
+
             <strong>{alert.type}</strong>
 
             <p>
@@ -101,13 +135,19 @@ export default function ViewAlerts() {
             <p>
               <b>Reason:</b> {alert.reason || "No reason provided"}
             </p>
+            <p>
+              <b>Date & Time:</b>{" "}
+              {formatDateTime(alert.timestamp || alert.createdAt)}
+            </p>
 
-            <button
-              className="delete-btn"
-              onClick={() => handleDelete(alert._id)}
-            >
-              Delete
-            </button>
+            {isAdmin && (
+              <button
+                className="delete-btn"
+                onClick={() => handleDelete(alert._id)}
+              >
+                Delete
+              </button>
+            )}
           </div>
         ))}
       </div>

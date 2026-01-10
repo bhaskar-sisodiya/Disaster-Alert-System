@@ -1,5 +1,6 @@
 import "./../styles/landing.css";
 import { Link, useNavigate } from "react-router-dom";
+import LatestAlertNotification from "./LatestAlertNotification";
 
 export default function LandingPage() {
   const token = localStorage.getItem("token");
@@ -10,7 +11,7 @@ export default function LandingPage() {
       <div className="landing dashboard">
         <div className="dashboard-container">
           <h1 className="dashboard-title">Welcome to Disaster Alert System</h1>
-
+          <LatestAlertNotification />
           <div className="dashboard-grid">
             <div
               className="dashboard-card"
@@ -54,8 +55,13 @@ export default function LandingPage() {
               <p>Quick access</p>
             </div>
 
-            <div className="dashboard-card placeholder">
-              +<p>Coming Soon</p>
+            <div
+              className="dashboard-card"
+              onClick={() => navigate("/alerts/history")}
+            >
+              🕓
+              <h3>Alert History</h3>
+              <p>All alerts with pagination</p>
             </div>
           </div>
         </div>
