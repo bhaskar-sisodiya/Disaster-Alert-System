@@ -7,6 +7,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  Cell,
 } from "recharts";
 
 import AnalyticsLayout from "./AnalyticsLayout";
@@ -42,7 +43,29 @@ export default function TopLocations() {
             <XAxis type="number" />
             <YAxis dataKey="location" type="category" width={120} />
             <Tooltip />
-            <Bar dataKey="count" />
+            <Bar
+              dataKey="count"
+              fill="#4E79A7" // default
+            >
+              {chartData.map((_, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={
+                    [
+                      "#4E79A7", // blue
+                      "#F28E2B", // orange
+                      "#E15759", // red
+                      "#76B7B2", // teal
+                      "#59A14F", // green
+                      "#EDC948", // yellow
+                      "#B07AA1", // purple
+                      "#9C755F", // brown
+                      "#BAB0AC", // gray
+                    ][index % 9]
+                  }
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       )}

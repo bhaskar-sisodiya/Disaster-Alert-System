@@ -43,13 +43,29 @@ export default function TypeDistribution() {
               nameKey="name"
               cx="50%"
               cy="50%"
-              innerRadius={90}   /* ✅ donut */
+              innerRadius={90} /* ✅ donut */
               outerRadius={140}
               paddingAngle={3}
               label
             >
               {chartData.map((_, index) => (
-                <Cell key={index} />
+                <Cell
+                  key={index}
+                  fill={
+                    [
+                      "#4E79A7", // deep blue
+                      "#F28E2B", // orange
+                      "#E15759", // red
+                      "#76B7B2", // teal
+                      "#59A14F", // green
+                      "#EDC948", // yellow
+                      "#B07AA1", // purple
+                      "#FF9DA7", // pink
+                      "#9C755F", // brown
+                      "#BAB0AC", // gray
+                    ][index % 10]
+                  }
+                />
               ))}
             </Pie>
 

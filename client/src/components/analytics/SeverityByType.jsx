@@ -52,9 +52,12 @@ export default function SeverityByType() {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="low" stackId="a" />
-            <Bar dataKey="medium" stackId="a" />
-            <Bar dataKey="high" stackId="a" />
+            <Bar dataKey="low" stackId="a" fill="#4CAF50" />{" "}
+            {/* ✅ Green for low severity */}
+            <Bar dataKey="medium" stackId="a" fill="#FFC107" />{" "}
+            {/* ✅ Amber/Yellow for medium severity */}
+            <Bar dataKey="high" stackId="a" fill="#F44336" />{" "}
+            {/* ✅ Red for high severity */}
           </BarChart>
         </ResponsiveContainer>
       )}

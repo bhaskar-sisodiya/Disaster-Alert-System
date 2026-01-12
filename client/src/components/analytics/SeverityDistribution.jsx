@@ -46,8 +46,17 @@ export default function SeverityDistribution() {
               outerRadius={150}
               label
             >
-              {chartData.map((_, index) => (
-                <Cell key={index} />
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={index}
+                  fill={
+                    {
+                      LOW: "#4CAF50", // ✅ Green for low severity
+                      MEDIUM: "#FFC107", // ✅ Amber/Yellow for medium severity
+                      HIGH: "#F44336", // ✅ Red for high severity
+                    }[entry.name] || "#607D8B" // fallback professional blue-gray
+                  }
+                />
               ))}
             </Pie>
 
