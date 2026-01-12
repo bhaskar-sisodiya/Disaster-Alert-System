@@ -40,7 +40,10 @@ export default function LandingPage() {
               <p>See active alerts</p>
             </div>
 
-            <div className="dashboard-card">
+            <div
+              className="dashboard-card"
+              onClick={() => navigate("/analytics")}
+            >
               📊
               <h3>Analytics</h3>
               <p>Insights & trends</p>

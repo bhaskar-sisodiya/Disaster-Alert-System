@@ -1,0 +1,53 @@
+.chart-wrapper {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+}
+
+.info-text {
+  text-align: center;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.error-text {
+  text-align: center;
+  color: red;
+  font-weight: 700;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.summary-card {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.summary-label {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.summary-value {
+  margin: 10px 0 0 0;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #111827;
+}
+
+@media (max-width: 900px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}

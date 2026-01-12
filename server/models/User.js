@@ -12,14 +12,14 @@ const userSchema = new mongoose.Schema(
       default: "avatar1", // fallback avatar
     },
 
-    phone: { type: String },
+    phone: { type: String, default: "" },
     gender: {
       type: String,
       enum: ["Male", "Female", "Other", "Prefer not to say"],
       default: "Prefer not to say",
     },
-    location: { type: String },
-
+    location: { type: String, default: "" },
+    locationKey: { type: String, default: "" },
     isAdmin: { type: Boolean, default: false },
   },
   { timestamps: true }
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
 
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
 });
 
 /* Compare password */

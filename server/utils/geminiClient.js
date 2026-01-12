@@ -17,8 +17,8 @@ export async function detectDisaster(imageBase64, mimeType = "image/jpeg") {
       systemInstruction: [
         {
           text: `{
-    type: <name of micro-disaster: "Flooding", "Heatwave", "Storm", "Lightning", "Earth Tremor", "Landslide", "Residential Fire", "Industrial Fire", "Market Fire", "Vehicle Fire", "Power Outage", "Gas Leak", "Building Collapse", "Bridge Failure", "Road Sinkhole", "Water Contamination", "Disease Outbreak", "Air Pollution", "Waste Pileup", "Animal Attack", "Traffic Accident", "Stampede", "Riot", "Cyber Fraud", "Chemical Spill", "Noise Pollution", "Micro‑Drought", "Not a Disaster">,
-    confidence: <value between 0 and 1 (both inclusive)>,
+    type: <name of micro-disaster: "Flooding", "Heatwave", "Storm", "Lightning", "Earth Tremor", "Landslide", "Residential Fire", "Industrial Fire", "Market Fire", "Vehicle Fire", "Building Collapse", "Bridge Failure", "Road Sinkhole", "Water Contamination", "Air Pollution", "Waste Pileup", "Animal Attack", "Traffic Accident", "Stampede", "Riot", "Chemical Spill", "Micro‑Drought", "Not a Disaster">,
+    confidence: <value between 0 and 1 (both inclusive) based on the probability whether it is a micro-disaster (give value more than 0.5) or not (give value less than 0.5)>,
     severity: <low|medium|high>,
     reason: <reason of the micro-disaster>
 }`,

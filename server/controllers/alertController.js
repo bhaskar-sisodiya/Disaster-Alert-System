@@ -1,7 +1,10 @@
 // controllers/alertController.js
 import Alert from "../models/Alert.js";
+import User from "../models/User.js";
+import { sendEmail } from "../utils/sendEmail.js";
 import { detectDisaster } from "../utils/geminiClient.js";
 import { uploadAlertImage } from "../utils/uploadToSupabase.js";
+import { normalizeLocationKey, toTitleCase } from "../utils/locationUtils.js";
 
 /**
  * POST /api/alerts
@@ -67,7 +70,8 @@ export const createAlert = async (req, res) => {
     const imageUrl = await uploadAlertImage(imageBuffer, mimeType);
 
     // Clean up location string (remove accidental quotes)
-    const cleanLocation = location?.replace(/^"|"$/g, "") || "Unknown";
+    const cleanLocation = toTitleCase(location || "Unknown");
+    const locationKey = normalizeLocationKey(location || "Unknown");
 
     // Create alert document in MongoDB
     const alert = await Alert.create({
@@ -76,9 +80,79 @@ export const createAlert = async (req, res) => {
       severity: detection.severity,
       reason: detection.reason || "No reason provided",
       location: cleanLocation,
+      locationKey,
       timestamp: new Date(),
       imageUrl,
     });
+
+    const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+    const viewAlertsLink = `${CLIENT_URL}/alerts/view`;
+
+    if (alert.type !== "Not a Disaster") {
+      (async () => {
+        try {
+          const users = await User.find({
+            email: { $exists: true, $ne: "" },
+            locationKey: locationKey,
+          }).select("email");
+
+          for (const user of users) {
+            await sendEmail({
+              to: user.email,
+              subject: `🚨 ${alert.type} Alert in ${alert.location}`,
+              html: `
+    <div style="font-family: Arial, sans-serif; padding: 15px;">
+      <h2 style="color:#dc2626;">🚨 New Disaster Alert</h2>
+
+      <p>
+        A new <b>${alert.type}</b> alert has been detected in
+        <b>${alert.location}</b>.
+      </p>
+
+      <p style="margin-top:10px;">
+        Please visit our website to view full details and stay updated.
+      </p>
+
+      <a href="${viewAlertsLink}"
+        style="
+          display:inline-block;
+          margin-top:12px;
+          padding:10px 16px;
+          background:#2563eb;
+          color:white;
+          text-decoration:none;
+          border-radius:8px;
+          font-weight:600;
+        ">
+        View Active Alerts →
+      </a>
+
+      ${
+        alert.imageUrl
+          ? `<div style="margin-top:18px;">
+              <p><b>Image Preview:</b></p>
+              <img src="${alert.imageUrl}"
+                  alt="Alert Image"
+                  style="max-width:100%; border-radius:10px; border:1px solid #ddd;" />
+            </div>`
+          : ""
+      }
+
+      <p style="margin-top:18px; color:#6b7280; font-size:0.9rem;">
+        Stay safe,<br/>
+        Disaster Alert System
+      </p>
+    </div>
+  `,
+            });
+          }
+
+          console.log("✅ Email notifications sent");
+        } catch (err) {
+          console.error("❌ Email notification error:", err.message);
+        }
+      })();
+    }
 
     // TODO: Broadcast via Socket.IO here
     // io.emit("newAlert", alert);
@@ -122,7 +196,6 @@ export const getAlertsHistory = async (req, res) => {
   }
 };
 
-
 /**
  * GET /api/alerts
  * Fetch ACTIVE alerts (last 24 hours only)
@@ -141,7 +214,6 @@ export const getAlertsWithin1Day = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 /**
  * DELETE /api/alerts/:id

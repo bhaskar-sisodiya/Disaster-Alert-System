@@ -1,14 +1,13 @@
 // controllers/userController.js
 import User from "../models/User.js";
+import { normalizeLocationKey, toTitleCase } from "../utils/locationUtils.js";
 
 /**
  * GET /api/users/profile
  * Get logged-in user's profile
  */
 export const getUserProfile = async (req, res) => {
-  const user = await User.findById(req.user._id).select(
-    "-password"
-  );
+  const user = await User.findById(req.user._id).select("-password");
 
   if (!user) {
     return res.status(404).json({ message: "User not found" });
@@ -25,43 +24,32 @@ export const updateUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    /* ✅ USERNAME (UNIQUE CHECK) */
+    // ✅ USERNAME UPDATE
     if (req.body.username && req.body.username !== user.username) {
-      const usernameExists = await User.findOne({
-        username: req.body.username,
-      });
+      const usernameExists = await User.findOne({ username: req.body.username });
 
-      if (usernameExists) {
-        return res
-          .status(400)
-          .json({ message: "Username already taken" });
+      if (usernameExists && usernameExists._id.toString() !== user._id.toString()) {
+        return res.status(400).json({ message: "Username already taken" });
       }
 
       user.username = req.body.username;
     }
 
-    /* ✅ SAFE FIELDS */
+    // ✅ SAFE FIELDS
     user.phone = req.body.phone ?? user.phone;
     user.gender = req.body.gender ?? user.gender;
-    user.location = req.body.location ?? user.location;
 
-    /* 🖼️ AVATAR (VALIDATED) */
-    const allowedAvatars = [
-      "avatar1",
-      "avatar2",
-      "avatar3",
-      "avatar4",
-      "avatar5",
-    ];
+    // ✅ LOCATION
+    if (req.body.location !== undefined) {
+      user.location = req.body.location ? toTitleCase(req.body.location) : "";
+      user.locationKey = req.body.location ? normalizeLocationKey(req.body.location) : "";
+    }
 
-    if (
-      req.body.avatar &&
-      allowedAvatars.includes(req.body.avatar)
-    ) {
+    // ✅ AVATAR
+    const allowedAvatars = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5"];
+    if (req.body.avatar && allowedAvatars.includes(req.body.avatar)) {
       user.avatar = req.body.avatar;
     }
 
@@ -75,8 +63,9 @@ export const updateUserProfile = async (req, res) => {
         phone: updatedUser.phone,
         gender: updatedUser.gender,
         location: updatedUser.location,
+        locationKey: updatedUser.locationKey, // optional but useful
         avatar: updatedUser.avatar,
-        isAdmin: updatedUser.isAdmin, // read-only
+        isAdmin: updatedUser.isAdmin, // ✅ READ ONLY
       },
     });
   } catch (error) {

@@ -8,6 +8,16 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import CreateAlert from "./components/CreateAlert";
 import ViewAlerts from "./components/ViewAlerts";
+
+import AnalyticsHome from "./components/analytics/AnalyticsHome";
+import AnalyticsSummary from "./components/analytics/AnalyticsSummary";
+import AlertsOverTime from "./components/analytics/AlertsOverTime";
+import TypeDistribution from "./components/analytics/TypeDistribution";
+import SeverityDistribution from "./components/analytics/SeverityDistribution";
+import SeverityByType from "./components/analytics/SeverityByType";
+import TopLocations from "./components/analytics/TopLocations";
+import ConfidenceBuckets from "./components/analytics/ConfidenceBuckets";
+
 import EmergencyCategories from "./components/EmergencyCategories";
 import EmergencyNumbers from "./components/EmergencyNumbers";
 import Profile from "./components/Profile";
@@ -15,6 +25,7 @@ import AlertHistory from "./components/AlertHistory";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
   return (
@@ -76,6 +87,74 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <AnalyticsHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics/summary"
+          element={
+            <ProtectedRoute>
+              <AnalyticsSummary />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics/alerts-over-time"
+          element={
+            <ProtectedRoute>
+              <AlertsOverTime />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics/type-distribution"
+          element={
+            <ProtectedRoute>
+              <TypeDistribution />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics/severity-distribution"
+          element={
+            <ProtectedRoute>
+              <SeverityDistribution />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics/severity-by-type"
+          element={
+            <ProtectedRoute>
+              <SeverityByType />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics/top-locations"
+          element={
+            <ProtectedRoute>
+              <TopLocations />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics/confidence-buckets"
+          element={
+            <ProtectedRoute>
+              <AdminRoute>
+                <ConfidenceBuckets />
+              </AdminRoute>
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/alerts/history"
           element={

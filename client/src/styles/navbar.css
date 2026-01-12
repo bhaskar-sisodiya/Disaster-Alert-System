@@ -40,3 +40,21 @@
   background: #dc2626;
   color: white;
 }
+
+.nav-user {
+  color: white;
+  font-weight: 500;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-badge {
+  background: #facc15;
+  color: #111827;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}

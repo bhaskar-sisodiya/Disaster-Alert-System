@@ -34,6 +34,8 @@ export default function Login() {
       if (!res.ok) throw new Error(data.message);
 
       localStorage.setItem("token", data.token);
+      // ✅ store profile (for admin check / navbar)
+      localStorage.setItem("profile", JSON.stringify(data.user));
       navigate("/");
     } catch (err) {
       setError(err.message);

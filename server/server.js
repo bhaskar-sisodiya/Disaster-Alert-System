@@ -8,18 +8,21 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import alertRoutes from "./routes/alertRoutes.js";
-import userRoutes from "./routes/userRoutes.js"
-import emergencyNumberRoutes from "./routes/emergencyNumberRoutes.js"
+import userRoutes from "./routes/userRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
+import emergencyNumberRoutes from "./routes/emergencyNumberRoutes.js";
 
 const app = express();
 
 // ✅ CORS configuration
-app.use(cors({
-  origin: "http://localhost:5173", // your Vite frontend URL
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173", // your Vite frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 
 // Middleware
 app.use(express.json());
@@ -28,6 +31,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/alerts", alertRoutes);
 app.use("/api/users/profile", userRoutes);
+app.use("/api/analytics", analyticsRoutes);
 app.use("/api/emergency", emergencyNumberRoutes);
 
 const PORT = process.env.PORT || 5000;

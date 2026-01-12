@@ -38,6 +38,8 @@ export default function Register() {
       if (!res.ok) throw new Error(data.message);
 
       localStorage.setItem("token", data.token);
+      // ✅ store profile
+      localStorage.setItem("profile", JSON.stringify(data.user));
       navigate("/");
     } catch (err) {
       setError(err.message);
