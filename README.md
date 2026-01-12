@@ -83,7 +83,7 @@ cd disaster-alert-system
 
 ### 2. Backend setup
 ```bash
-cd backend
+cd server
 npm install
 ```
 
@@ -117,7 +117,7 @@ npm run dev
 
 ### 3. Frontend setup
 ```bash
-cd ../frontend
+cd ../client
 npm install
 ```
 
