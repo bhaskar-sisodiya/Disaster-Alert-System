@@ -66,6 +66,16 @@ export default function LandingPage() {
               <h3>Alert History</h3>
               <p>All alerts with pagination</p>
             </div>
+
+            <div
+              className="dashboard-card"
+              onClick={() => navigate("/alerts/map")}
+            >
+              🗺️
+              <h3>Alerts Map</h3>
+              <p>Pinpoint disasters on map</p>
+            </div>
+            
           </div>
         </div>
       </div>

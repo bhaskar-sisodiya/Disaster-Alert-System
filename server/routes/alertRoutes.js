@@ -3,7 +3,7 @@
 import express from "express";
 import multer from "multer";
 import { protect } from "../middleware/authMiddleware.js";
-import { createAlert, deleteAlert, getAlertsWithin1Day, getAlertsHistory } from "../controllers/alertController.js";
+import { createAlert, deleteAlert, getAlertsWithin1Day, getAlertsHistory, getAlertsForMap } from "../controllers/alertController.js";
 
 const router = express.Router();
 
@@ -21,5 +21,8 @@ router.get("/history", protect, getAlertsHistory);
 
 // DELETE route
 router.delete("/:id", protect, deleteAlert);
+
+router.get("/map", protect, getAlertsForMap);
+
 
 export default router;

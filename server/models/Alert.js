@@ -24,6 +24,8 @@ const alertSchema = mongoose.Schema(
     },
     reason: { type: String },
     location: { type: String },
+    lat: { type: Number, required: true, min: -90, max: 90 },
+    lng: { type: Number, required: true, min: -180, max: 180 },
     timestamp: { type: Date, default: Date.now },
   },
   { timestamps: true }

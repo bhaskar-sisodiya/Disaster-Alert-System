@@ -1,4 +1,12 @@
-import EmergencyNumber from "../models/EmergencyNumber.js";
+// controllers/emergencyNumberController.js
+
+import {
+  fetchAllEmergencyNumbers,
+  fetchEmergencyByCategory,
+  upsertEmergencyNumber,
+} from "../services/emergencyNumberService.js";
+
+import { validateEmergencyNumberInput } from "../validators/emergencyNumberValidator.js";
 
 /**
  * POST /api/emergency
@@ -8,42 +16,15 @@ export const createEmergencyNumber = async (req, res) => {
   try {
     const { category, numbers } = req.body;
 
-    // 🔴 Basic validation
-    if (!category || !numbers || !Array.isArray(numbers) || numbers.length === 0) {
-      return res.status(400).json({
-        message: "Category and at least one emergency number are required",
-      });
+    const valid = validateEmergencyNumberInput({ category, numbers });
+    if (!valid.ok) {
+      return res.status(valid.status).json({ message: valid.message });
     }
 
-    const numberEntry = numbers[0];
-
-    if (!numberEntry.name || !numberEntry.number) {
-      return res.status(400).json({
-        message: "Emergency number must include name and number",
-      });
-    }
-
-    // ✅ UPSERT: update if exists, else create
-    const emergency = await EmergencyNumber.findOneAndUpdate(
-      { category }, // find by category
-      {
-        $push: {
-          numbers: {
-            name: numberEntry.name,
-            number: numberEntry.number,
-            description: numberEntry.description || "",
-            isNational:
-              numberEntry.isNational !== undefined
-                ? numberEntry.isNational
-                : true,
-          },
-        },
-      },
-      {
-        new: true,       // return updated document
-        upsert: true,    // create if not exists
-      }
-    );
+    const emergency = await upsertEmergencyNumber({
+      category,
+      numberEntry: valid.numberEntry,
+    });
 
     res.status(201).json({
       message: "Emergency number added successfully",
@@ -58,17 +39,13 @@ export const createEmergencyNumber = async (req, res) => {
   }
 };
 
-
 /**
  * GET /api/emergency
  * Fetch all emergency numbers
  */
 export const getAllEmergencyNumbers = async (req, res) => {
   try {
-    const emergencyNumbers = await EmergencyNumber.find().sort({
-      createdAt: -1,
-    });
-
+    const emergencyNumbers = await fetchAllEmergencyNumbers();
     res.status(200).json(emergencyNumbers);
   } catch (error) {
     console.error("Error fetching emergency numbers:", error);
@@ -87,9 +64,8 @@ export const getEmergencyByCategory = async (req, res) => {
   try {
     const { category } = req.params;
 
-    const data = await EmergencyNumber.findOne({ category });
+    const data = await fetchEmergencyByCategory(category);
 
-    // ✅ Category exists but no numbers added yet
     if (!data) {
       return res.status(200).json({
         category,

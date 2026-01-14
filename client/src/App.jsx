@@ -27,6 +27,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import AdminRoute from "./components/AdminRoute";
 
+import AlertsMap from "./components/AlertsMap";
+
 function App() {
   return (
     <>
@@ -177,6 +179,15 @@ function App() {
           element={
             <ProtectedRoute>
               <EmergencyNumbers />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/alerts/map"
+          element={
+            <ProtectedRoute>
+              <AlertsMap />
             </ProtectedRoute>
           }
         />

@@ -1,23 +1,20 @@
-import User from "../models/User.js";
-import jwt from "jsonwebtoken";
+// controllers/authController.js
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
-};
+import { generateToken } from "../utils/generateToken.js";
+import { registerNewUser, loginExistingUser } from "../services/authService.js";
+import { validateLoginInput, validateRegisterInput } from "../validators/authValidator.js";
 
 export const registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
-
   try {
-    const emailExists = await User.findOne({ email });
-    if (emailExists)
-      return res.status(400).json({ message: "Email already registered" });
+    const { username, email, password } = req.body;
 
-    const usernameExists = await User.findOne({ username });
-    if (usernameExists)
-      return res.status(400).json({ message: "Username already taken" });
+    const valid = validateRegisterInput({ username, email, password });
+    if (!valid.ok) return res.status(valid.status).json({ message: valid.message });
 
-    const user = await User.create({ username, email, password });
+    const result = await registerNewUser({ username, email, password });
+    if (!result.ok) return res.status(result.status).json({ message: result.message });
+
+    const user = result.user;
 
     res.status(201).json({
       token: generateToken(user._id),
@@ -35,24 +32,26 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
   try {
-    const user = await User.findOne({ email });
+    const { email, password } = req.body;
 
-    if (user && (await user.matchPassword(password))) {
-      res.json({
-        token: generateToken(user._id),
-        user: {
-          _id: user._id,
-          username: user.username,
-          email: user.email,
-          isAdmin: user.isAdmin,
-        },
-      });
-    } else {
-      res.status(401).json({ message: "Invalid credentials" });
-    }
+    const valid = validateLoginInput({ email, password });
+    if (!valid.ok) return res.status(valid.status).json({ message: valid.message });
+
+    const result = await loginExistingUser({ email, password });
+    if (!result.ok) return res.status(result.status).json({ message: result.message });
+
+    const user = result.user;
+
+    res.json({
+      token: generateToken(user._id),
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Server error" });
