@@ -1,3 +1,4 @@
+// components/ViewAlerts.jsx
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./../styles/alerts.css";
@@ -6,7 +7,9 @@ export default function ViewAlerts() {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
-  const [isAdmin, setIsAdmin] = useState(false);
+  const role = JSON.parse(localStorage.getItem("profile") || "null")?.role;
+  const canDelete = role === "admin" || role === "dma";
+
   const [alerts, setAlerts] = useState([]);
   const [error, setError] = useState("");
 
@@ -140,7 +143,7 @@ export default function ViewAlerts() {
               {formatDateTime(alert.timestamp || alert.createdAt)}
             </p>
 
-            {isAdmin && (
+            {canDelete && (
               <button
                 className="delete-btn"
                 onClick={() => handleDelete(alert._id)}

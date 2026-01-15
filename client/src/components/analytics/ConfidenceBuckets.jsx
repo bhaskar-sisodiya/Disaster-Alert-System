@@ -1,3 +1,4 @@
+// components/analytics/ConfidenceBuckets.jsx
 import { useMemo, useState } from "react";
 import {
   BarChart,

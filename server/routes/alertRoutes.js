@@ -4,6 +4,7 @@ import express from "express";
 import multer from "multer";
 import { protect } from "../middleware/authMiddleware.js";
 import { createAlert, deleteAlert, getAlertsWithin1Day, getAlertsHistory, getAlertsForMap } from "../controllers/alertController.js";
+import { authorizeRoles } from "../middleware/roleMiddleware.js";
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // POST route accepts file upload
-router.post("/", protect, upload.single("image"), createAlert);
+router.post("/", protect, authorizeRoles("operator", "admin"), upload.single("image"), createAlert);
 
 // GET route
 router.get("/", protect, getAlertsWithin1Day);
@@ -20,7 +21,7 @@ router.get("/", protect, getAlertsWithin1Day);
 router.get("/history", protect, getAlertsHistory);
 
 // DELETE route
-router.delete("/:id", protect, deleteAlert);
+router.delete("/:id", protect, authorizeRoles("admin", "dma"), deleteAlert);
 
 router.get("/map", protect, getAlertsForMap);
 

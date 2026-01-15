@@ -1,3 +1,4 @@
+// validators/emergencyNumberValidator.js
 export const validateEmergencyNumberInput = ({ category, numbers }) => {
   if (!category || !numbers || !Array.isArray(numbers) || numbers.length === 0) {
     return {

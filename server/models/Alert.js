@@ -1,3 +1,4 @@
+// models/Alert.js
 import mongoose from "mongoose";
 
 const alertSchema = mongoose.Schema(

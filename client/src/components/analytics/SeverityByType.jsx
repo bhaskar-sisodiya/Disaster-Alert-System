@@ -1,3 +1,4 @@
+// components/analytics/SeverityByType.jsx
 import { useMemo, useState } from "react";
 import {
   BarChart,

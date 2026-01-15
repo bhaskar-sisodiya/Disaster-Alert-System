@@ -1,3 +1,4 @@
+// components/EmergencyCategories.jsx
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./../styles/emergency.css";
@@ -5,6 +6,9 @@ import "./../styles/emergency.css";
 export default function EmergencyCategories() {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
+
+  const role = JSON.parse(localStorage.getItem("profile") || "null")?.role;
+  const canAddEmergency = role === "admin" || role === "dma";
 
   const categories = [
     "Universal",
@@ -87,44 +91,49 @@ export default function EmergencyCategories() {
       </div>
 
       {/* 🔹 ADD NUMBER FORM */}
-      <form className="alert-form" onSubmit={handleSubmit}>
-        <h3>Add Emergency Number</h3>
+      {canAddEmergency && (
+        <form className="alert-form" onSubmit={handleSubmit}>
+          <h3>Add Emergency Number</h3>
 
-        {error && <p className="error-text">{error}</p>}
-        {success && <p className="success-text">{success}</p>}
+          {error && <p className="error-text">{error}</p>}
+          {success && <p className="success-text">{success}</p>}
 
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="">Select Category</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="">Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
 
-        <input
-          type="text"
-          placeholder="Service name (e.g. Police Control Room)"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="Service name (e.g. Police Control Room)"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-        <input
-          type="text"
-          placeholder="Emergency number"
-          value={number}
-          onChange={(e) => setNumber(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="Emergency number"
+            value={number}
+            onChange={(e) => setNumber(e.target.value)}
+          />
 
-        <input
-          type="text"
-          placeholder="Description (optional)"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="Description (optional)"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
 
-        <button type="submit">Add Number</button>
-      </form>
+          <button type="submit">Add Number</button>
+        </form>
+      )}
 
       {/* 🔹 GRID */}
       <div className="emergency-grid" style={{ marginTop: "3rem" }}>

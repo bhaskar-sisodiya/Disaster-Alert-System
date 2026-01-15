@@ -1,3 +1,4 @@
+// components/AlertsMap.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from "react-leaflet";

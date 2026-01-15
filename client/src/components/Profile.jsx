@@ -1,3 +1,5 @@
+// components/Profile.jsx
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./../styles/profile.css";
@@ -26,41 +28,64 @@ export default function Profile() {
   }, []);
 
   const fetchProfile = async () => {
-    const res = await fetch(`${API_URL}/users/profile`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    try {
+      const res = await fetch(`${API_URL}/users/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    const data = await res.json();
-    setProfile(data);
-    setForm({
-      avatar: data.avatar || "avatar1",
-      username: data.username,
-      phone: data.phone || "",
-      gender: data.gender || "Prefer not to say",
-      location: data.location || "",
-    });
-    setLoading(false);
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to load profile");
+
+      setProfile(data);
+
+      // ✅ update localStorage so Navbar role/username stays correct
+      localStorage.setItem("profile", JSON.stringify(data));
+
+      setForm({
+        avatar: data.avatar || "avatar1",
+        username: data.username || "",
+        phone: data.phone || "",
+        gender: data.gender || "Prefer not to say",
+        location: data.location || "",
+      });
+    } catch (err) {
+      console.error("Fetch profile error:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleUpdate = async () => {
     setMessage("");
 
-    const res = await fetch(`${API_URL}/users/profile`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch(`${API_URL}/users/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(form),
+      });
 
-    const data = await res.json();
-    setMessage(data.message);
-    setEditMode(false);
-    fetchProfile();
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Profile update failed");
+
+      setMessage(data.message || "Profile updated successfully");
+      setEditMode(false);
+
+      // ✅ refresh profile (also updates localStorage)
+      fetchProfile();
+    } catch (err) {
+      console.error("Profile update error:", err);
+      setMessage(err.message);
+    }
   };
 
   if (loading) return <p>Loading profile...</p>;
+  if (!profile) return <p className="error-text">Profile not found</p>;
 
   return (
     <div className="profile-page">
@@ -69,14 +94,16 @@ export default function Profile() {
         ← Back
       </button>
 
-      <h1>{profile?.isAdmin ? "Admin Profile" : "User Profile"}</h1>
+      <h1>
+        {profile?.role ? `${profile.role.toUpperCase()} Profile` : "Profile"}
+      </h1>
 
       <div className="profile-card">
         {/* VIEW MODE */}
         {!editMode && (
           <div className="profile-view">
             <img
-              src={avatars[profile.avatar]}
+              src={avatars[profile.avatar] || avatars.avatar1}
               alt="Avatar"
               className="profile-avatar"
             />
@@ -158,7 +185,8 @@ export default function Profile() {
                 onClick={() => {
                   setEditMode(false);
                   setForm({
-                    username: profile.username,
+                    avatar: profile.avatar || "avatar1",
+                    username: profile.username || "",
                     phone: profile.phone || "",
                     gender: profile.gender || "Prefer not to say",
                     location: profile.location || "",

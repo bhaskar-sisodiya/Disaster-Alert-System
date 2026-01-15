@@ -1,5 +1,6 @@
 import "./../styles/navbar.css";
 import { useNavigate } from "react-router-dom";
+import WeatherBadge from "./WeatherBadge";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -9,9 +10,9 @@ export default function Navbar() {
 
   const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("profile"); // ✅ important
+    localStorage.removeItem("profile");
     navigate("/");
-    window.location.reload(); // ✅ ensures navbar updates instantly
+    window.location.reload();
   };
 
   return (
@@ -23,20 +24,34 @@ export default function Navbar() {
       <div className="nav-actions">
         {!token ? (
           <>
-            <button className="btn secondary" onClick={() => navigate("/login")}>
+            <button
+              className="btn secondary"
+              onClick={() => navigate("/login")}
+            >
               Login
             </button>
-            <button className="btn primary" onClick={() => navigate("/register")}>
+            <button
+              className="btn primary"
+              onClick={() => navigate("/register")}
+            >
               Register
             </button>
           </>
         ) : (
           <>
+            {/* ✅ Weather badge */}
+            <WeatherBadge />
+
             {/* ✅ show username */}
             {profile?.username && (
               <span className="nav-user">
                 Hi, <b>{profile.username}</b>
-                {profile?.isAdmin && <span className="admin-badge">ADMIN</span>}
+                {/* ✅ role badge */}
+                {profile?.role && (
+                  <span className="admin-badge">
+                    {profile.role.toUpperCase()}
+                  </span>
+                )}
               </span>
             )}
 

@@ -1,3 +1,4 @@
+// validators/userValidator.js
 export const validateAvatar = (avatar) => {
   const allowedAvatars = ["avatar1", "avatar2", "avatar3", "avatar4", "avatar5"];
 

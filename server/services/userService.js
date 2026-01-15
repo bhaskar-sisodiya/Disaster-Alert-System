@@ -1,3 +1,4 @@
+// services/userService.js
 import User from "../models/User.js";
 import { normalizeLocationKey, toTitleCase } from "../utils/locationUtils.js";
 

@@ -1,3 +1,4 @@
+// utils/locationUtils.js
 export const normalizeLocationKey = (value = "") =>
   value.trim().toLowerCase().replace(/\s+/g, " ");
 

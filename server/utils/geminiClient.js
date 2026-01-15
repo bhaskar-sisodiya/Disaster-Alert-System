@@ -1,4 +1,4 @@
-// geminiClient.js
+// utils/geminiClient.js
 // Dependencies: npm install @google/genai mime
 
 import { GoogleGenAI } from "@google/genai";

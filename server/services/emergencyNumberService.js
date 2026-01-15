@@ -1,3 +1,4 @@
+// services/emergencyNumberService.js
 import EmergencyNumber from "../models/EmergencyNumber.js";
 
 export const upsertEmergencyNumber = async ({ category, numberEntry }) => {

@@ -1,0 +1,36 @@
+.weather-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  /* ✅ For light navbar */
+  background: #f3f4f6;          /* light gray */
+  color: #111827;               /* dark text */
+  border: 1px solid #e5e7eb;    /* border gray */
+}
+
+.weather-loading {
+  opacity: 0.85;
+}
+
+.weather-temp {
+  font-weight: 800;
+}
+
+.weather-climate,
+.weather-wind {
+  opacity: 0.9;
+}
+
+/* Responsive: hide climate & wind text on small screens */
+@media (max-width: 540px) {
+  .weather-climate,
+  .weather-wind {
+    display: none;
+  }
+}

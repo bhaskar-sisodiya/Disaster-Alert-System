@@ -1,3 +1,4 @@
+// components/AlertHistory.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./../styles/alerthistory.css";

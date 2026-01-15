@@ -1,4 +1,4 @@
-// groqClient.js
+// utils/groqClient.js
 // Dependencies: npm install groq-sdk dotenv
 
 import dotenv from "dotenv";

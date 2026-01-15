@@ -1,3 +1,4 @@
+// utils/emailTemplates/alertEmailTemplate.js
 export const buildAlertEmailTemplate = ({ alert, viewAlertsLink }) => {
   return `
     <div style="font-family: Arial, sans-serif; padding: 15px;">

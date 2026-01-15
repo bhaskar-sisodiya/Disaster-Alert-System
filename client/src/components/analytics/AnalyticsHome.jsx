@@ -1,29 +1,14 @@
+// components/analytics/AnalyticsHome.jsx
+
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import "../../styles/analytics/analyticsHome.css";
 
 export default function AnalyticsHome() {
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL;
 
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    const fetchRole = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(`${API_URL}/users/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        if (res.ok) setIsAdmin(!!data.isAdmin);
-      } catch (err) {
-        console.error("Admin check failed:", err);
-      }
-    };
-
-    fetchRole();
-  }, []);
+  const profile = JSON.parse(localStorage.getItem("profile") || "null");
+  const role = profile?.role;
+  const canSeeConfidence = role === "admin";
 
   const cards = [
     {
@@ -54,7 +39,7 @@ export default function AnalyticsHome() {
       title: "Severity by Type",
       desc: "Severity breakdown per disaster type.",
       path: "/analytics/severity-by-type",
-      img: "/images/analytics-stacked.jpg",
+      img: "/analytics/severity-by-type",
     },
     {
       title: "Top Locations",
@@ -62,7 +47,7 @@ export default function AnalyticsHome() {
       path: "/analytics/top-locations",
       img: "/images/analytics-locations.jpg",
     },
-    ...(isAdmin
+    ...(canSeeConfidence
       ? [
           {
             title: "AI Confidence (Admin)",

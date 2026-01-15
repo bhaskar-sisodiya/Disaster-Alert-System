@@ -1,3 +1,4 @@
+// components/analytics/TypeDistribution.jsx
 import { useMemo, useState } from "react";
 import {
   PieChart,

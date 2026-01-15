@@ -20,7 +20,11 @@ const userSchema = new mongoose.Schema(
     },
     location: { type: String, default: "" },
     locationKey: { type: String, default: "" },
-    isAdmin: { type: Boolean, default: false },
+    role: {
+      type: String,
+      enum: ["admin", "dma", "operator", "user"],
+      default: "user",
+    },
   },
   { timestamps: true }
 );

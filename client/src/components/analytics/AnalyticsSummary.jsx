@@ -1,3 +1,4 @@
+// components/analytics/AnalyticsSummary.jsx
 import { useState } from "react";
 import AnalyticsLayout from "./AnalyticsLayout";
 import useAnalyticsDashboard from "../../hooks/useAnalyticsDashboard";

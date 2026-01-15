@@ -1,3 +1,4 @@
+// services/alertService.js
 import Alert from "../models/Alert.js";
 
 // import { detectDisaster } from "../utils/geminiClient.js";

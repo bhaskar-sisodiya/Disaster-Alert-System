@@ -1,3 +1,4 @@
+// App.jsx
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -25,7 +26,8 @@ import AlertHistory from "./components/AlertHistory";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
-import AdminRoute from "./components/AdminRoute";
+import RoleRoute from "./components/RoleRoute";
+import { ROLES } from "./constants/roles";
 
 import AlertsMap from "./components/AlertsMap";
 
@@ -77,7 +79,9 @@ function App() {
           path="/alerts/create"
           element={
             <ProtectedRoute>
-              <CreateAlert />
+              <RoleRoute allowedRoles={[ROLES.ADMIN, ROLES.OPERATOR]}>
+                <CreateAlert />
+              </RoleRoute>
             </ProtectedRoute>
           }
         />
@@ -94,7 +98,9 @@ function App() {
           path="/analytics"
           element={
             <ProtectedRoute>
-              <AnalyticsHome />
+              <RoleRoute allowedRoles={[ROLES.ADMIN, ROLES.DMA]}>
+                <AnalyticsHome />
+              </RoleRoute>
             </ProtectedRoute>
           }
         />
@@ -150,9 +156,9 @@ function App() {
           path="/analytics/confidence-buckets"
           element={
             <ProtectedRoute>
-              <AdminRoute>
+              <RoleRoute allowedRoles={[ROLES.ADMIN]}>
                 <ConfidenceBuckets />
-              </AdminRoute>
+              </RoleRoute>
             </ProtectedRoute>
           }
         />

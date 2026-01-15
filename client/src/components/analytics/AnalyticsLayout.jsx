@@ -1,3 +1,4 @@
+// components/analytics/AnalyticsLayout.jsx
 import { useNavigate } from "react-router-dom";
 import "../../../src/styles/analytics/analyticsCommon.css";
 

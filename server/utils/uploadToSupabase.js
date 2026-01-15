@@ -1,3 +1,4 @@
+// utils/uploadToSupabase.js
 import supabase from "./supabaseClient.js";
 
 export const uploadAlertImage = async (buffer, mimeType) => {

@@ -1,3 +1,4 @@
+// components/PublicRoute.jsx
 import { Navigate, useLocation } from "react-router-dom";
 
 export default function PublicRoute({ children }) {

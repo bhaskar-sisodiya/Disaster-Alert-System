@@ -1,3 +1,4 @@
+// services/analyticsService.js
 import Alert from "../models/Alert.js";
 
 export const fetchAnalyticsSummary = async ({ match, range }) => {

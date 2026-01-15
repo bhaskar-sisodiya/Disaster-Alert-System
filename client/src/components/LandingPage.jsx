@@ -1,3 +1,4 @@
+// components/LandingPage.jsx
 import "./../styles/landing.css";
 import { Link, useNavigate } from "react-router-dom";
 import LatestAlertNotification from "./LatestAlertNotification";

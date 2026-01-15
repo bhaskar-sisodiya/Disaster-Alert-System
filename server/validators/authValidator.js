@@ -1,3 +1,4 @@
+// validators/authValidator.js
 export const validateRegisterInput = ({ username, email, password }) => {
   if (!username || !email || !password) {
     return { ok: false, status: 400, message: "All fields are required" };

@@ -42,7 +42,7 @@
 }
 
 .nav-user {
-  color: white;
+  color: #111827;
   font-weight: 500;
   margin-right: 12px;
   display: flex;
@@ -51,10 +51,12 @@
 }
 
 .admin-badge {
-  background: #facc15;
-  color: #111827;
-  padding: 3px 8px;
-  border-radius: 20px;
+  margin-left: 8px;
+  padding: 10px;
+  border-radius: 999px;
+
+  background: #111827;  /* dark badge */
+  color: white;         /* white inside badge */
   font-size: 0.75rem;
-  font-weight: 800;
+  font-weight: 700;
 }

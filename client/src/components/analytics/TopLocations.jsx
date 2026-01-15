@@ -1,3 +1,4 @@
+// components/analytics/TopLocations.jsx
 import { useMemo, useState } from "react";
 import {
   BarChart,

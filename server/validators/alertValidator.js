@@ -1,3 +1,4 @@
+// validators/alertValidator.js
 export const validateSingleFileUpload = (req) => {
   if (req.files && req.files.length > 1) {
     return {

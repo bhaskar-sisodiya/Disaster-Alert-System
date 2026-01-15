@@ -1,3 +1,4 @@
+// components/analytics/SeverityDistribution.jsx
 import { useMemo, useState } from "react";
 import {
   PieChart,

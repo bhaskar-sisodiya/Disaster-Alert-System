@@ -1,3 +1,4 @@
+// routes/emergencyNumberRoutes.js
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
 import {
@@ -5,11 +6,12 @@ import {
   getAllEmergencyNumbers,
   getEmergencyByCategory,
 } from "../controllers/emergencyNumberController.js";
+import { authorizeRoles } from "../middleware/roleMiddleware.js";
 
 const router = express.Router();
 
 /* Create emergency numbers */
-router.post("/", protect, createEmergencyNumber);
+router.post("/", protect, authorizeRoles("admin"), createEmergencyNumber);
 
 /* View all emergency numbers */
 router.get("/", protect, getAllEmergencyNumbers);

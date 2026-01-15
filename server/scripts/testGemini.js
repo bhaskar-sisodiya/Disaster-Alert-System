@@ -1,4 +1,4 @@
-// testGemini.js
+// scripts/testGemini.js
 import dotenv from "dotenv";
 dotenv.config();
 

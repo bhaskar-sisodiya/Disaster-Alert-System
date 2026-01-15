@@ -1,3 +1,4 @@
+// services/authService.js
 import User from "../models/User.js";
 
 export const registerNewUser = async ({ username, email, password }) => {
@@ -11,7 +12,7 @@ export const registerNewUser = async ({ username, email, password }) => {
     return { ok: false, status: 400, message: "Username already taken" };
   }
 
-  const user = await User.create({ username, email, password });
+  const user = await User.create({ username, email, password, role: "user" });
   return { ok: true, user };
 };
 

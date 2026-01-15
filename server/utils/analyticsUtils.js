@@ -1,3 +1,4 @@
+// utils/analyticsUtils.js
 /**
  * Helper: parse range query
  * allowed: 24h, 7d, 30d, 90d, all
