@@ -1,6 +1,7 @@
 import Alert from "../models/Alert.js";
 
-import { detectDisaster } from "../utils/geminiClient.js";
+// import { detectDisaster } from "../utils/geminiClient.js";
+import { detectDisaster } from "../utils/groqClient.js";
 import { uploadAlertImage } from "../utils/uploadToSupabase.js";
 import { normalizeLocationKey, toTitleCase } from "../utils/locationUtils.js";
 
