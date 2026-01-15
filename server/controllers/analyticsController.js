@@ -3,6 +3,8 @@
 import { buildMatchQuery } from "../utils/analyticsUtils.js";
 
 import {
+  fetchStatusKpi,
+  fetchDmaAssignmentKpi,
   fetchAnalyticsDashboard,
   fetchAnalyticsSummary,
   fetchAlertsOverTime,
@@ -12,6 +14,38 @@ import {
   fetchTopLocations,
   fetchConfidenceBuckets,
 } from "../services/analyticsService.js";
+
+/**
+ * GET /api/analytics/status-kpi
+ */
+export const getStatusKpi = async (req, res) => {
+  try {
+    const range = req.query.range || "30d";
+    const match = buildMatchQuery(range);
+
+    const data = await fetchStatusKpi({ match, range });
+    res.json(data);
+  } catch (error) {
+    console.error("Status KPI error:", error);
+    res.status(500).json({ message: "Failed to fetch status KPI" });
+  }
+};
+
+/**
+ * GET /api/analytics/dma-assignment
+ */
+export const getDmaAssignmentKpi = async (req, res) => {
+  try {
+    const range = req.query.range || "30d";
+    const match = buildMatchQuery(range);
+
+    const data = await fetchDmaAssignmentKpi({ match, range });
+    res.json(data);
+  } catch (error) {
+    console.error("DMA Assignment KPI error:", error);
+    res.status(500).json({ message: "Failed to fetch DMA assignment KPI" });
+  }
+};
 
 /**
  * GET /api/analytics/summary

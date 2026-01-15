@@ -5,6 +5,23 @@ import User from "../models/User.js";
 const ALLOWED_ROLES = ["admin", "dma", "operator", "user"];
 
 /**
+ * GET /api/admin/users
+ * Admin: fetch all users (without passwords)
+ */
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find()
+      .select("-password")
+      .sort({ createdAt: -1 });
+
+    return res.json(users);
+  } catch (error) {
+    console.error("Get all users error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+/**
  * PUT /api/admin/users/:id/role
  * Admin updates a user's role
  */
@@ -13,7 +30,7 @@ export const updateUserRole = async (req, res) => {
     const { id } = req.params;
     const { role } = req.body;
 
-    // 1) Validate role
+    // ✅ validate role
     if (!role || !ALLOWED_ROLES.includes(role)) {
       return res.status(400).json({
         message: "Invalid role",
@@ -21,18 +38,18 @@ export const updateUserRole = async (req, res) => {
       });
     }
 
-    // 2) Find user
+    // ✅ find user
     const user = await User.findById(id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // 3) Prevent admin from demoting themselves (recommended)
+    // ✅ prevent admin from demoting themselves
     if (req.user._id.toString() === user._id.toString() && role !== "admin") {
       return res.status(400).json({
         message: "You cannot remove your own admin role",
       });
     }
 
-    // 4) Update role
+    // ✅ update role
     user.role = role;
     await user.save();
 

@@ -1,5 +1,6 @@
 // services/alertService.js
 import Alert from "../models/Alert.js";
+import User from "../models/User.js";
 
 // import { detectDisaster } from "../utils/geminiClient.js";
 import { detectDisaster } from "../utils/groqClient.js";
@@ -88,6 +89,41 @@ export const getActiveAlertsForMap = async () => {
   })
     .sort({ createdAt: -1 })
     .select("type severity location reason timestamp imageUrl lat lng createdAt");
+};
+
+export const updateAlertStatusById = async ({ alertId, status, userId }) => {
+  return Alert.findByIdAndUpdate(
+    alertId,
+    {
+      status,
+      statusUpdatedBy: userId,
+      statusUpdatedAt: new Date(),
+    },
+    { new: true }
+  );
+};
+
+export const assignDmaToAlertById = async ({ alertId, dmaUserId, assignedBy }) => {
+  const dma = await User.findById(dmaUserId);
+  if (!dma) {
+    return { error: { status: 404, message: "DMA user not found" } };
+  }
+
+  if (dma.role !== "dma") {
+    return { error: { status: 400, message: "Selected user is not a DMA" } };
+  }
+
+  const updated = await Alert.findByIdAndUpdate(
+    alertId,
+    {
+      assignedDma: dmaUserId,
+      assignedBy,
+      assignedAt: new Date(),
+    },
+    { new: true }
+  ).populate("assignedDma", "username email role location phone");
+
+  return updated;
 };
 
 export const deleteAlertById = async (id) => {

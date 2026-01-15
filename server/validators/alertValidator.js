@@ -59,3 +59,22 @@ export const validateMongoId = (id) => {
   }
   return { ok: true };
 };
+
+export const validateAlertStatus = (status) => {
+  const allowed = ["no_action", "in_process", "resolved"];
+  if (!status || !allowed.includes(status)) {
+    return {
+      ok: false,
+      status: 400,
+      message: `Invalid status. Allowed: ${allowed.join(", ")}`,
+    };
+  }
+  return { ok: true, value: status };
+};
+
+export const validateDmaUserId = (id) => {
+  if (!id || id.length !== 24) {
+    return { ok: false, status: 400, message: "Invalid DMA user ID" };
+  }
+  return { ok: true, value: id };
+};

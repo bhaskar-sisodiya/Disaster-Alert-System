@@ -1,6 +1,8 @@
 // services/analyticsService.js
+// services/analyticsService.js
 import Alert from "../models/Alert.js";
 
+/* ---------------- SUMMARY ---------------- */
 export const fetchAnalyticsSummary = async ({ match, range }) => {
   const [
     totalAlerts,
@@ -50,6 +52,7 @@ export const fetchAnalyticsSummary = async ({ match, range }) => {
   };
 };
 
+/* ---------------- ALERTS OVER TIME ---------------- */
 export const fetchAlertsOverTime = async ({ match, range }) => {
   const points = await Alert.aggregate([
     { $match: match },
@@ -82,6 +85,7 @@ export const fetchAlertsOverTime = async ({ match, range }) => {
   return { range, points };
 };
 
+/* ---------------- TYPE DISTRIBUTION ---------------- */
 export const fetchTypeDistribution = async ({ match, range }) => {
   const data = await Alert.aggregate([
     { $match: match },
@@ -92,6 +96,7 @@ export const fetchTypeDistribution = async ({ match, range }) => {
   return { range, data };
 };
 
+/* ---------------- SEVERITY DISTRIBUTION ---------------- */
 export const fetchSeverityDistribution = async ({ match, range }) => {
   const data = await Alert.aggregate([
     { $match: match },
@@ -107,6 +112,7 @@ export const fetchSeverityDistribution = async ({ match, range }) => {
   return { range, data };
 };
 
+/* ---------------- SEVERITY BY TYPE ---------------- */
 export const fetchSeverityByType = async ({ match, range }) => {
   const data = await Alert.aggregate([
     { $match: match },
@@ -136,6 +142,7 @@ export const fetchSeverityByType = async ({ match, range }) => {
   return { range, data };
 };
 
+/* ---------------- TOP LOCATIONS ---------------- */
 export const fetchTopLocations = async ({ match, range, limit = 8 }) => {
   const data = await Alert.aggregate([
     { $match: match },
@@ -147,6 +154,7 @@ export const fetchTopLocations = async ({ match, range, limit = 8 }) => {
   return { range, data };
 };
 
+/* ---------------- CONFIDENCE BUCKETS ---------------- */
 export const fetchConfidenceBuckets = async ({ match, range }) => {
   const data = await Alert.aggregate([
     { $match: match },
@@ -174,6 +182,65 @@ export const fetchConfidenceBuckets = async ({ match, range }) => {
   return { range, data };
 };
 
+/* ---------------- STATUS KPI ---------------- */
+export const fetchStatusKpi = async ({ match, range }) => {
+  const data = await Alert.aggregate([
+    { $match: match },
+    {
+      $group: {
+        _id: { $toLower: "$status" },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { _id: 1 } },
+  ]);
+
+  return { range, data };
+};
+
+/* ---------------- DMA ASSIGNMENT KPI ---------------- */
+export const fetchDmaAssignmentKpi = async ({ match, range }) => {
+  const [assignedCount, perDma] = await Promise.all([
+    Alert.countDocuments({ ...match, assignedDma: { $ne: null } }),
+
+    Alert.aggregate([
+      { $match: { ...match, assignedDma: { $ne: null } } },
+      {
+        $group: {
+          _id: "$assignedDma",
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { count: -1 } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "dma",
+        },
+      },
+      { $unwind: "$dma" },
+      {
+        $project: {
+          _id: 0,
+          dmaId: "$dma._id",
+          count: 1,
+          dma: {
+            username: "$dma.username",
+            email: "$dma.email",
+            location: "$dma.location",
+            phone: "$dma.phone",
+          },
+        },
+      },
+    ]),
+  ]);
+
+  return { range, assignedCount, perDma };
+};
+
+/* ---------------- DASHBOARD ---------------- */
 export const fetchAnalyticsDashboard = async ({ match, range }) => {
   const [
     summary,
@@ -183,6 +250,8 @@ export const fetchAnalyticsDashboard = async ({ match, range }) => {
     severityByType,
     topLocations,
     confidenceBuckets,
+    statusKpi,
+    dmaAssignment,
   ] = await Promise.all([
     fetchAnalyticsSummary({ match, range }),
     fetchAlertsOverTime({ match, range }),
@@ -191,10 +260,15 @@ export const fetchAnalyticsDashboard = async ({ match, range }) => {
     fetchSeverityByType({ match, range }),
     fetchTopLocations({ match, range, limit: 8 }),
     fetchConfidenceBuckets({ match, range }),
+
+    // ✅ NEW
+    fetchStatusKpi({ match, range }),
+    fetchDmaAssignmentKpi({ match, range }),
   ]);
 
   return {
     range,
+
     summary: {
       totalAlerts: summary.totalAlerts,
       highSeverity: summary.highSeverity,
@@ -202,11 +276,20 @@ export const fetchAnalyticsDashboard = async ({ match, range }) => {
       mostAffectedLocation: summary.mostAffectedLocation,
       avgConfidence: summary.avgConfidence,
     },
+
     alertsOverTime: alertsOverTime.points,
     typeDistribution: typeDistribution.data,
     severityDistribution: severityDistribution.data,
     severityByType: severityByType.data,
     topLocations: topLocations.data,
     confidenceBuckets: confidenceBuckets.data,
+
+    // ✅ NEW return fields
+    statusKpi: statusKpi.data,
+
+    dmaAssignment: {
+      assignedCount: dmaAssignment.assignedCount,
+      perDma: dmaAssignment.perDma,
+    },
   };
 };

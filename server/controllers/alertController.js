@@ -16,6 +16,12 @@ import {
 
 import { notifyUsersAboutAlert } from "../services/notificationService.js";
 
+import { updateAlertStatusById } from "../services/alertService.js";
+import { validateAlertStatus } from "../validators/alertValidator.js";
+
+import { assignDmaToAlertById } from "../services/alertService.js";
+import { validateDmaUserId } from "../validators/alertValidator.js";
+
 /**
  * POST /api/alerts
  * Create a new alert from uploaded image
@@ -124,6 +130,58 @@ export const deleteAlert = async (req, res) => {
     res.json({ message: "Alert deleted successfully", deletedAlert: alert });
   } catch (error) {
     console.error("Error deleting alert:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const updateAlertStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const idCheck = validateMongoId(id);
+    if (!idCheck.ok) return res.status(idCheck.status).json({ message: idCheck.message });
+
+    const statusCheck = validateAlertStatus(status);
+    if (!statusCheck.ok) return res.status(statusCheck.status).json({ message: statusCheck.message });
+
+    const updated = await updateAlertStatusById({
+      alertId: id,
+      status: statusCheck.value,
+      userId: req.user._id,
+    });
+
+    if (!updated) return res.status(404).json({ message: "Alert not found" });
+
+    res.json({ message: "Alert status updated", alert: updated });
+  } catch (err) {
+    console.error("Update alert status error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const assignDmaToAlert = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { dmaUserId } = req.body;
+
+    const idCheck = validateMongoId(id);
+    if (!idCheck.ok) return res.status(idCheck.status).json({ message: idCheck.message });
+
+    const dmaCheck = validateDmaUserId(dmaUserId);
+    if (!dmaCheck.ok) return res.status(dmaCheck.status).json({ message: dmaCheck.message });
+
+    const updated = await assignDmaToAlertById({
+      alertId: id,
+      dmaUserId: dmaCheck.value,
+      assignedBy: req.user._id,
+    });
+
+    if (!updated) return res.status(404).json({ message: "Alert not found" });
+
+    res.json({ message: "DMA assigned successfully", alert: updated });
+  } catch (err) {
+    console.error("Assign DMA error:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 };

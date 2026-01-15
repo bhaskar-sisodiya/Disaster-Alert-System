@@ -3,6 +3,8 @@ import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
 
 import {
+  getStatusKpi,
+  getDmaAssignmentKpi,
   getAnalyticsSummary,
   getAlertsOverTime,
   getTypeDistribution,
@@ -16,6 +18,8 @@ import {
 const router = express.Router();
 
 router.get("/summary", protect, getAnalyticsSummary);
+router.get("/status-kpi", protect, getStatusKpi);
+router.get("/dma-assignment", protect, getDmaAssignmentKpi);
 router.get("/dashboard", protect, getAnalyticsDashboard);
 router.get("/alerts-over-time", protect, getAlertsOverTime);
 router.get("/type-distribution", protect, getTypeDistribution);

@@ -7,17 +7,28 @@ export default function LandingPage() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
+  // ✅ FIX: get profile from localStorage
+  const profile = JSON.parse(localStorage.getItem("profile") || "null");
+
   if (token) {
     return (
       <div className="landing dashboard">
         <div className="dashboard-container">
           <h1 className="dashboard-title">Welcome to Disaster Alert System</h1>
+
           <LatestAlertNotification />
+
           <div className="dashboard-grid">
-            <div
-              className="dashboard-card"
-              onClick={() => navigate("/profile")}
-            >
+            {/* ✅ Admin Panel only for admin */}
+            {profile?.role === "admin" && (
+              <div className="dashboard-card" onClick={() => navigate("/admin")}>
+                🛠️
+                <h3>Admin Panel</h3>
+                <p>Manage users & roles</p>
+              </div>
+            )}
+
+            <div className="dashboard-card" onClick={() => navigate("/profile")}>
               👤
               <h3>Profile</h3>
               <p>View & edit personal details</p>
@@ -76,7 +87,6 @@ export default function LandingPage() {
               <h3>Alerts Map</h3>
               <p>Pinpoint disasters on map</p>
             </div>
-            
           </div>
         </div>
       </div>

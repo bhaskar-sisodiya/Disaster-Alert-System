@@ -27,6 +27,34 @@ const alertSchema = mongoose.Schema(
     location: { type: String },
     lat: { type: Number, required: true, min: -90, max: 90 },
     lng: { type: Number, required: true, min: -180, max: 180 },
+    status: {
+      type: String,
+      enum: ["no_action", "in_process", "resolved"],
+      default: "no_action",
+    },
+    statusUpdatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    statusUpdatedAt: {
+      type: Date,
+      default: null,
+    },
+    assignedDma: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    assignedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    assignedAt: {
+      type: Date,
+      default: null,
+    },
     timestamp: { type: Date, default: Date.now },
   },
   { timestamps: true }

@@ -1,6 +1,8 @@
 // components/analytics/AnalyticsSummary.jsx
 import { useState } from "react";
 import AnalyticsLayout from "./AnalyticsLayout";
+import StatusKpi from "./StatusKpi";
+import DmaAssignmentKpi from "./DmaAssignmentKpi";
 import useAnalyticsDashboard from "../../hooks/useAnalyticsDashboard";
 import "../../styles/analytics/analyticsCharts.css";
 
@@ -49,6 +51,21 @@ export default function AnalyticsSummary() {
             </h2>
           </div>
         </div>
+      )}
+
+      {/* ✅ NEW KPIs */}
+      {!isLoading && !error && data?.statusKpi && (
+        <>
+          <h2 style={{ marginTop: "2rem" }}>Status KPI</h2>
+          <StatusKpi statusKpi={data.statusKpi} />
+        </>
+      )}
+
+      {!isLoading && !error && data?.dmaAssignment && (
+        <>
+          <h2 style={{ marginTop: "2rem" }}>DMA Assignment KPI</h2>
+          <DmaAssignmentKpi dmaAssignment={data.dmaAssignment} />
+        </>
       )}
     </AnalyticsLayout>
   );

@@ -26,6 +26,14 @@
   font-weight: 500;
 }
 
+.admin-back {
+  margin-top: 12px;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+
 /* Back Button */
 .page-back-btn {
   position: absolute;

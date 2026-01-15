@@ -5,6 +5,9 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Navbar from "./components/Navbar";
 import LandingPage from "./components/LandingPage";
+
+import AdminPanel from "./components/admin/AdminPanel";
+
 import Login from "./components/Login";
 import Register from "./components/Register";
 import CreateAlert from "./components/CreateAlert";
@@ -39,6 +42,17 @@ function App() {
 
       {/* 🔄 Page content */}
       <Routes>
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <RoleRoute allowedRoles={[ROLES.ADMIN]}>
+                <AdminPanel />
+              </RoleRoute>
+            </ProtectedRoute>
+          }
+        />
+
         {/* PUBLIC */}
         <Route
           path="/"
@@ -79,7 +93,9 @@ function App() {
           path="/alerts/create"
           element={
             <ProtectedRoute>
-              <RoleRoute allowedRoles={[ROLES.ADMIN, ROLES.OPERATOR]}>
+              <RoleRoute
+                allowedRoles={[ROLES.ADMIN, ROLES.OPERATOR, ROLES.USER]}
+              >
                 <CreateAlert />
               </RoleRoute>
             </ProtectedRoute>
@@ -98,7 +114,7 @@ function App() {
           path="/analytics"
           element={
             <ProtectedRoute>
-              <RoleRoute allowedRoles={[ROLES.ADMIN, ROLES.DMA]}>
+              <RoleRoute allowedRoles={[ROLES.ADMIN, ROLES.DMA, ROLES.USER]}>
                 <AnalyticsHome />
               </RoleRoute>
             </ProtectedRoute>

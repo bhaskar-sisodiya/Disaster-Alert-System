@@ -27,15 +27,6 @@ export default function ViewAlerts() {
     });
   };
 
-  const fetchProfile = async () => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(`${API_URL}/users/profile`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
-    setIsAdmin(data.isAdmin);
-  };
-
   const fetchAlerts = async () => {
     const token = localStorage.getItem("token");
 
@@ -46,6 +37,8 @@ export default function ViewAlerts() {
     }
 
     try {
+      setError("");
+
       const res = await fetch(`${API_URL}/alerts`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -76,6 +69,8 @@ export default function ViewAlerts() {
     if (!token) return;
 
     try {
+      setError("");
+
       const res = await fetch(`${API_URL}/alerts/${alertId}`, {
         method: "DELETE",
         headers: {
@@ -98,7 +93,6 @@ export default function ViewAlerts() {
 
   useEffect(() => {
     fetchAlerts();
-    fetchProfile();
   }, []);
 
   return (
@@ -113,6 +107,8 @@ export default function ViewAlerts() {
         <h1 className="page-title">Active Alerts</h1>
         <p className="page-subtitle">Showing alerts from last 24 hours</p>
       </div>
+
+      {error && <p className="error-text">{error}</p>}
 
       <div className="alerts-grid">
         {alerts.length === 0 && !error && <p>No alerts found</p>}
